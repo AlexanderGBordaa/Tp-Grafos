@@ -1,0 +1,40 @@
+from collections import deque  
+
+def existe_paso(grafo, vertice_origen, vertice_destino):  
+    # Verificar si los vértices de origen y destino están en el grafo  
+    if vertice_origen not in grafo or vertice_destino not in grafo:  
+        return False  
+     
+    cola = deque([vertice_origen])  
+    visitados = set()  
+
+    while cola:  
+        vertice_actual = cola.popleft()  
+
+        # Si llegamos al vértice destino  
+        if vertice_actual == vertice_destino:  
+            return True  
+
+        # Marcar el vértice como visitado  
+        visitados.add(vertice_actual)  
+
+        # Añadir vértices vecinos a la cola  
+        for vecino in grafo[vertice_actual]:  
+            if vecino not in visitados:  
+                cola.append(vecino)  
+
+    # Si salimos del bucle, no encontramos un camino  
+    return False  
+ 
+grafo = {  
+    'A': ['B', 'C'],  
+    'B': ['A', 'D'],  
+    'C': ['A', 'E'],  
+    'D': ['B'],  
+    'E': ['C', 'F'],  
+    'F': ['E']  
+}  
+
+print(existe_paso(grafo, 'A', 'F')) 
+print(existe_paso(grafo, 'A', 'D')) 
+print(existe_paso(grafo, 'H', 'E')) 
