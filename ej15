@@ -1,0 +1,22 @@
+def barrido_profundidad(grafo, vertice, visitados=None):  
+    if visitados is None:  
+        visitados = set()  
+
+    visitados.add(vertice)  
+    print(vertice)    
+
+    for vecino in grafo[vertice]:  
+        if vecino not in visitados:  
+            barrido_profundidad(grafo, vecino, visitados)  
+  
+grafo = {  
+    'A': ['B', 'C'],  
+    'B': ['A', 'D', 'E'],  
+    'C': ['A'],  
+    'D': ['B'],  
+    'E': ['B', 'F'],  
+    'F': ['E']  
+}  
+
+print("BPF:")  
+barrido_profundidad(grafo, 'A')
