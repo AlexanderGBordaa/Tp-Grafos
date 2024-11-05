@@ -1,22 +1,63 @@
-def barrido_profundidad(grafo, vertice, visitados=None):  
-    if visitados is None:  
-        visitados = set()  
+from grafo import Graph
 
-    visitados.add(vertice)  
-    print(vertice)    
+maravillas = [
+    {"nombre": "Gran Muralla China", "pais": ["China"], "tipo": "arquitectonica"},
+    {"nombre": "Petra", "pais": ["Jordania"], "tipo": "arquitectonica"},
+    {"nombre": "Cristo Redentor", "pais": ["Brasil"], "tipo": "arquitectonica"},
+    {"nombre": "Machu Picchu", "pais": ["Peru"], "tipo": "arquitectonica"},
+    {"nombre": "Chichen Itza", "pais": ["México"], "tipo": "arquitectonica"},
+    {"nombre": "Coliseo de Roma", "pais": ["Italia"], "tipo": "arquitectonica"},
+    {"nombre": "Taj Mahal", "pais": ["India"], "tipo": "arquitectonica"},
+    {"nombre": "Amazonas", "pais": ["Brasil", "Colombia", "Peru", "Venezuela"], "tipo": "natural"},
+    {"nombre": "Bahía de Ha-Long", "pais": ["Vietnam"], "tipo": "natural"},
+    {"nombre": "Cataratas del Iguazú", "pais": ["Argentina", "Brasil"], "tipo": "natural"},
+    {"nombre": "Isla Jeju", "pais": ["Corea del Sur"], "tipo": "natural"},
+    {"nombre": "Montaña de la Mesa", "pais": ["Sudáfrica"], "tipo": "natural"},
+    {"nombre": "Parque Nacional de Komodo", "pais": ["Indonesia"], "tipo": "natural"},
+    {"nombre": "Río subterráneo de Puerto Princesa", "pais": ["Filipinas"], "tipo": "natural"}
+]
 
-    for vecino in grafo[vertice]:  
-        if vecino not in visitados:  
-            barrido_profundidad(grafo, vecino, visitados)  
-  
-grafo = {  
-    'A': ['B', 'C'],  
-    'B': ['A', 'D', 'E'],  
-    'C': ['A'],  
-    'D': ['B'],  
-    'E': ['B', 'F'],  
-    'F': ['E']  
-}  
+grafo = Graph(dirigido=False)
 
-print("BPF:")  
-barrido_profundidad(grafo, 'A')
+for maravilla in maravillas:
+    grafo.insert_vertice(maravilla['nombre'],maravilla)
+
+
+distancias = [
+    ["Gran Muralla China", "Petra", 5000],
+    ["Gran Muralla China", "Cristo Redentor", 17000],
+    ["Petra", "Cristo Redentor", 12000],
+    ["Cristo Redentor", "Machu Picchu", 3500],
+    ["Machu Picchu", "Chichen Itza", 4000],
+    ["Chichen Itza", "Coliseo de Roma", 10000],
+    ["Coliseo de Roma", "Taj Mahal", 6500],
+    # Distancias entre maravillas naturales
+    ["Amazonas", "Bahía de Ha-Long", 17000],
+    ["Amazonas", "Cataratas del Iguazú", 1000],
+    ["Cataratas del Iguazú", "Isla Jeju", 18000],
+    ["Isla Jeju", "Montaña de la Mesa", 13000],
+    ["Montaña de la Mesa", "Parque Nacional de Komodo", 7000],
+    ["Parque Nacional de Komodo", "Río subterráneo de Puerto Princesa", 2000]
+]
+
+for origen, destino,peso in distancias:
+    grafo.insert_arista(origen,destino,peso)
+    
+for origen, destino, peso in distancias:
+    grafo.insert_arista(origen, destino, peso)
+
+# Imprimir los vértices y las aristas del grafo
+print("\nVértices del Grafo (Maravillas):")
+for vertice in grafo.elements:
+    print(f" - {vertice['value']} ({vertice['data']['tipo']}) en {', '.join(vertice['data']['pais'])}")
+
+print("\nAristas del Grafo (Distancias entre Maravillas):")
+for vertice in grafo.elements:
+    for arista in vertice['aristas']:
+        print(f" - {vertice['value']} <-> {arista['value']} (Distancia: {arista['peso']} km)")
+
+# Ejemplo: Calcular y mostrar el árbol de expansión mínima de maravillas arquitectónicas
+arbol_min_arquitectonico = grafo.kruskal("Gran Muralla China")
+print("\nÁrbol de Expansión Mínima para Maravillas Arquitectónicas:")
+for arista in arbol_min_arquitectonico:
+    print(f" - {arista[0]} <-> {arista[1]} (Distancia: {arista[2]} km)")
